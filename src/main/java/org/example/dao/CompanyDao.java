@@ -1,0 +1,63 @@
+package org.example.dao;
+
+import org.example.configuration.SessionFactoryUtil;
+import org.example.dto.CompanyDto;
+import org.example.entity.Company;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class CompanyDao {
+    public static void createCompany(CompanyDto companyDto) {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Company company = new Company();
+            company.setName(companyDto.getName());
+            company.setIncome(companyDto.getIncome());
+            session.persist(company);
+            transaction.commit();
+        }
+    }
+
+    public static List<CompanyDto> getCompanies() {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "SELECT new org.example.dto.CompanyDto(c.id,c.name,c.income) FROM Company c",
+                            CompanyDto.class)
+                    .getResultList();
+        }
+    }
+
+    public static CompanyDto getCompany(long id) {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "SELECT new org.example.dto.CompanyDto(c.id, c.name, c.income) FROM Company c " +
+                            "WHERE c.id = :id", CompanyDto.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        }
+    }
+
+    public static void updateCompany(long id, CompanyDto company) {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Company company1 = session.find(Company.class, id);
+            company1.setName(company.getName());
+            company1.setIncome(company.getIncome());
+            session.persist(company1);
+            transaction.commit();
+        }
+    }
+
+    public static void deleteCompany(long id) {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Company company1 = session.find(Company.class, id);
+            session.remove(company1);
+            transaction.commit();
+        }
+    }
+}
