@@ -3,6 +3,7 @@ package org.example.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true)
 public class Client extends Person{
+    @Past
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "client")

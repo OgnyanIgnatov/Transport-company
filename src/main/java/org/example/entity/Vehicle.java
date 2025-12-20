@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,11 +16,13 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true)
 public class Vehicle extends BaseEntity{
+    @NotBlank
     private String regNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
+    @NotBlank
     @Enumerated(EnumType.STRING)
     private VehicleType type;
 

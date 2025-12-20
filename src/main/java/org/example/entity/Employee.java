@@ -1,6 +1,8 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.Set;
@@ -13,10 +15,14 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true)
 public class Employee extends Person{
+    @NotBlank
+    @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
     private String IDNumber;
+
     private long salary;
 
     @Enumerated(EnumType.STRING)
+    @NotBlank
     private EmployeeCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)

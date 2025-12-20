@@ -34,24 +34,24 @@ public class Main {
 //
 //        CompanyDao.getCompanies().forEach(System.out::println);
 
-        ClientDto clientDto = new ClientDto();
-        clientDto.setFirstName("Yanko");
-        clientDto.setLastName("Petrov");
-        clientDto.setBirthDate(LocalDate.parse("2003-07-11"));
-        ClientDao.createClient(clientDto);
-
-        ClientDao.getClients().forEach(System.out::println);
-        System.out.println(ClientDao.getClient(2));
-
-        ClientDto client1Dto = new ClientDto();
-        client1Dto.setFirstName("Yanko");
-        client1Dto.setLastName("Murshata");
-        client1Dto.setBirthDate(LocalDate.parse("2003-07-11"));
-        ClientDao.updateClient(2,client1Dto);
-        System.out.println(ClientDao.getClient(2));
-
-        ClientDao.deleteClient(2);
-        ClientDao.getClients().forEach(System.out::println);
+//        ClientDto clientDto = new ClientDto();
+//        clientDto.setFirstName("Yanko");
+//        clientDto.setLastName("Petrov");
+//        clientDto.setBirthDate(LocalDate.parse("2003-07-11"));
+//        ClientDao.createClient(clientDto);
+//
+//        ClientDao.getClients().forEach(System.out::println);
+//        System.out.println(ClientDao.getClient(2));
+//
+//        ClientDto client1Dto = new ClientDto();
+//        client1Dto.setFirstName("Yanko");
+//        client1Dto.setLastName("Murshata");
+//        client1Dto.setBirthDate(LocalDate.parse("2003-07-11"));
+//        ClientDao.updateClient(2,client1Dto);
+//        System.out.println(ClientDao.getClient(2));
+//
+//        ClientDao.deleteClient(2);
+//        ClientDao.getClients().forEach(System.out::println);
 
     }
 }

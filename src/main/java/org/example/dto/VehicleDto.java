@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,10 @@ import org.example.entity.VehicleType;
 @ToString
 public class VehicleDto {
     private long id;
-    private String registration;
+
+    @NotBlank
+    private String regNumber;
+
+    @NotBlank
     private VehicleType type;
 }

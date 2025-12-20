@@ -1,6 +1,8 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Set;
@@ -14,8 +16,10 @@ import java.util.Set;
 @ToString(callSuper = true)
 public class Company extends BaseEntity{
     @Column(unique = true)
+    @NotBlank
     private String name;
-    private long income;
+    //validation interface just to set default value
+    private long income = 0;
 
     @OneToMany(mappedBy = "company")
     private Set<Employee> employees;
