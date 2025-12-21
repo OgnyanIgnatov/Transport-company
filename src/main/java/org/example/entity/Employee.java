@@ -15,6 +15,7 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true)
 public class Employee extends Person{
+
     @NotBlank
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
     private String IDNumber;

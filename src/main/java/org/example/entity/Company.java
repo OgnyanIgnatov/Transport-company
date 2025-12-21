@@ -18,7 +18,7 @@ public class Company extends BaseEntity{
     @Column(unique = true)
     @NotBlank
     private String name;
-    //validation interface just to set default value
+
     private long income = 0;
 
     @OneToMany(mappedBy = "company")

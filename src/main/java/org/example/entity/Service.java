@@ -43,6 +43,7 @@ public class Service extends BaseEntity{
     private Employee employee;
 
     @Enumerated(EnumType.STRING)
+    //interface to check category
     private EmployeeCategory requiredCategory;
 
     @OneToMany(mappedBy = "service")

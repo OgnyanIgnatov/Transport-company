@@ -1,9 +1,6 @@
 package org.example.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -24,6 +21,7 @@ public class Person extends BaseEntity{
     private String lastName;
 
     @NotBlank
-    @Pattern(regexp = "'+'\\d{12}")
+    @Pattern(regexp = "0\\d{9}")
+    @Column(unique = true)
     private String telephoneNumber;
 }

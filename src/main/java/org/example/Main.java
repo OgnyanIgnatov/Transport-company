@@ -1,8 +1,8 @@
 package org.example;
 
 import org.example.configuration.SessionFactoryUtil;
-import org.example.dao.ClientDao;
 import org.example.dao.CompanyDao;
+import org.example.dao.PersonDao;
 import org.example.dto.ClientDto;
 import org.example.dto.CompanyDto;
 import org.example.entity.Client;
@@ -34,24 +34,26 @@ public class Main {
 //
 //        CompanyDao.getCompanies().forEach(System.out::println);
 
-//        ClientDto clientDto = new ClientDto();
-//        clientDto.setFirstName("Yanko");
-//        clientDto.setLastName("Petrov");
-//        clientDto.setBirthDate(LocalDate.parse("2003-07-11"));
-//        ClientDao.createClient(clientDto);
-//
-//        ClientDao.getClients().forEach(System.out::println);
-//        System.out.println(ClientDao.getClient(2));
-//
-//        ClientDto client1Dto = new ClientDto();
-//        client1Dto.setFirstName("Yanko");
-//        client1Dto.setLastName("Murshata");
-//        client1Dto.setBirthDate(LocalDate.parse("2003-07-11"));
-//        ClientDao.updateClient(2,client1Dto);
-//        System.out.println(ClientDao.getClient(2));
-//
-//        ClientDao.deleteClient(2);
-//        ClientDao.getClients().forEach(System.out::println);
+        ClientDto clientDto = new ClientDto();
+        clientDto.setFirstName("Kircho");
+        clientDto.setLastName("Petrov");
+        clientDto.setTelephoneNumber("0987654321");
+        clientDto.setBirthDate(LocalDate.parse("2003-07-11"));
+        PersonDao.createClient(clientDto);
+
+        PersonDao.getClients().forEach(System.out::println);
+        System.out.println(PersonDao.getClient(1));
+
+        ClientDto client1Dto = new ClientDto();
+        client1Dto.setFirstName("Kircho");
+        client1Dto.setLastName("Murshata");
+        client1Dto.setBirthDate(LocalDate.parse("2003-07-11"));
+        client1Dto.setTelephoneNumber("0123456789");
+        PersonDao.updateClient(1,client1Dto);
+        System.out.println(PersonDao.getClient(1));
+
+        PersonDao.deleteClient(1);
+        PersonDao.getClients().forEach(System.out::println);
 
     }
 }

@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 public class CompanyDto {
     private long id;
 
+    @Column(unique = true)
     @NotBlank
     private String name;
 

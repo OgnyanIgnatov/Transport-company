@@ -4,16 +4,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.example.entity.Client;
 import org.example.entity.Service;
 
 import java.time.LocalDate;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -28,8 +26,8 @@ public class PaymentDto {
     private LocalDate paymentDate;
 
     @NotBlank
-    private Client client;
+    private long clientId;
 
     @NotBlank
-    private Service service;
+    private long serviceId;
 }

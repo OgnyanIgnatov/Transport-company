@@ -1,19 +1,19 @@
 package org.example.dto;
 
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.example.entity.EmployeeCategory;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class EmployeeDto {
+@ToString(callSuper = true)
+public class EmployeeDto{
+
     private long id;
 
     @NotBlank
@@ -23,8 +23,13 @@ public class EmployeeDto {
     private String lastName;
 
     @NotBlank
-    @Pattern(regexp = "'+'\\d{12}")
+    @Pattern(regexp = "0\\d{9}")
+    @Column(unique = true)
     private String telephoneNumber;
+
+    @NotBlank
+    @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
+    private String IDNumber;
 
     @NotBlank
     private EmployeeCategory category;
