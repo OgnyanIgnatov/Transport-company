@@ -3,6 +3,7 @@ package org.example.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.example.validator.InvalidDate;
 
@@ -25,11 +26,11 @@ public class Service extends BaseEntity{
     @NotBlank
     private String arrLocation;
 
-    @NotBlank
+    @NotNull
     @FutureOrPresent
     private LocalDate depDate;
 
-    @NotBlank
+    @NotNull
     @FutureOrPresent
     private LocalDate arrDate;
 
@@ -42,9 +43,16 @@ public class Service extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private Employee employee;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    //interface to check category
     private EmployeeCategory requiredCategory;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private VehicleType requiredVehicleType;
+
+    @NotNull
+    private double servicePrice;
 
     @OneToMany(mappedBy = "service")
     private Set<Payment> payments;

@@ -5,7 +5,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -18,18 +20,19 @@ import java.time.LocalDate;
 @Setter
 @ToString(callSuper = true)
 public class Payment extends BaseEntity{
-    @NotBlank
-    private long price;
 
-    @NotBlank
+    @Positive
+    private double price;
+
+    @NotNull
     @PastOrPresent
     private LocalDate paymentDate;
 
-    @NotBlank
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 
-    @NotBlank
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Service service;
 

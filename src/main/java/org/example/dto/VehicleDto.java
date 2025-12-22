@@ -1,13 +1,14 @@
 package org.example.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.example.entity.VehicleType;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -17,6 +18,7 @@ public class VehicleDto {
     @NotBlank
     private String regNumber;
 
-    @NotBlank
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private VehicleType type;
 }

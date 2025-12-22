@@ -2,7 +2,10 @@ package org.example.dto;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.example.entity.EmployeeCategory;
@@ -31,6 +34,7 @@ public class EmployeeDto{
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
     private String IDNumber;
 
-    @NotBlank
+    @NotNull
+    @Enumerated(EnumType.ORDINAL)
     private EmployeeCategory category;
 }

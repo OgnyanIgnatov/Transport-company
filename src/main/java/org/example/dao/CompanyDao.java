@@ -3,6 +3,8 @@ package org.example.dao;
 import org.example.configuration.SessionFactoryUtil;
 import org.example.dto.CompanyDto;
 import org.example.entity.Company;
+import org.example.entity.Employee;
+import org.example.entity.Vehicle;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -57,6 +59,28 @@ public class CompanyDao {
             Transaction transaction = session.beginTransaction();
             Company company1 = session.find(Company.class, id);
             session.remove(company1);
+            transaction.commit();
+        }
+    }
+
+    public static void hireToCompany(long companyId, long employeeId){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Company company = session.find(Company.class, companyId);
+            Employee employee = session.find(Employee.class, employeeId);
+            employee.setCompany(company);
+            session.persist(employee);
+            transaction.commit();
+        }
+    }
+
+    public static void buyVehicleForCompany(long companyId, long vehicleId){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Company company = session.find(Company.class, companyId);
+            Vehicle vehicle = session.find(Vehicle.class, vehicleId);
+            vehicle.setCompany(company);
+            session.persist(vehicle);
             transaction.commit();
         }
     }
