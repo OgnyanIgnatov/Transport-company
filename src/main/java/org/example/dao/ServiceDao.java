@@ -1,12 +1,20 @@
 package org.example.dao;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import org.example.configuration.SessionFactoryUtil;
 
-import org.example.dto.PassengerServiceDto;
-import org.example.dto.TransportServiceDto;
+import org.example.dto.*;
 import org.example.entity.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ServiceDao {
@@ -168,5 +176,119 @@ public class ServiceDao {
             transaction.commit();
         }
     }
+
+    public static List<GetServiceDto> sortServicesByDestination(){
+        try(Session session = SessionFactoryUtil.getSessionFactory().openSession()){
+            return session.createQuery(
+                            "SELECT new GetServiceDto(s.id, s.depLocation, s.arrLocation, s.depDate, s.arrDate) " +
+                                    "FROM Service s " +
+                                    "ORDER BY s.arrLocation", GetServiceDto.class)
+                    .getResultList();
+        }
+    }
+
+
+    public static void writeToFile(List<GetServiceDto> services) {
+
+        String FILE_PATH = "services.csv";
+
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(FILE_PATH))) {
+
+            writer.write("ID,Departure,Arrival,DepDate,ArrDate");
+            writer.newLine();
+
+            for (GetServiceDto s : services) {
+                writer.write(
+                        s.getId() + "," +
+                                s.getDepLocation() + "," +
+                                s.getArrLocation() + "," +
+                                s.getDepDate() + "," +
+                                s.getArrDate() + ","
+                );
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("File write error", e);
+        }
+    }
+
+    public static Long getCountOfServicesDone() {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<Service> root = cq.from(Service.class);
+
+            cq.select(cb.count(root))
+                    .where(cb.lessThan(root.get("depDate"), LocalDate.now()));
+
+            return session.createQuery(cq).getSingleResult();
+        }
+    }
+
+
+    public static Double getPriceSumOfServicesDone() {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Double> cq = cb.createQuery(Double.class);
+            Root<Service> root = cq.from(Service.class);
+
+            cq.select(cb.sum(root.get("servicePrice")))
+                    .where(cb.lessThan(root.get("depDate"), LocalDate.now()));
+
+            return session.createQuery(cq).getSingleResult();
+        }
+    }
+
+
+    public static List<GetEmployeeServiceCountDto> getEmployeesServiceCount() {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<GetEmployeeServiceCountDto> cq = cb.createQuery(GetEmployeeServiceCountDto.class);
+
+            Root<Service> root = cq.from(Service.class);
+            Join<Service, Employee> employee = root.join("employee");
+            cq.select(cb.construct(
+                            GetEmployeeServiceCountDto.class,
+                            employee.get("id"),
+                            employee.get("firstName"),
+                            employee.get("lastName"),
+                            cb.count(root)
+                    ))
+                    .where(cb.lessThan(root.get("depDate"), LocalDate.now()))
+                    .groupBy(employee.get("id"), employee.get("firstName"), employee.get("lastName"));
+
+            return session.createQuery(cq).getResultList();
+        }
+    }
+
+    public static List<GetEmployeeServiceIncomeDto> getEmployeesServiceIncomeSum(){
+        try(Session session = SessionFactoryUtil.getSessionFactory().openSession()){
+            LocalDate today = LocalDate.now();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<GetEmployeeServiceIncomeDto> cq = cb.createQuery(GetEmployeeServiceIncomeDto.class);
+
+            Root<Service> root = cq.from(Service.class);
+            Join<Service, Employee> employee = root.join("employee");
+
+            cq.select(cb.construct(
+                    GetEmployeeServiceIncomeDto.class,
+                    employee.get("id"),
+                    employee.get("firstName"),
+                    employee.get("lastName"),
+                    cb.sum(root.get("servicePrice"))
+            )
+            ).where(
+                    cb.lessThan(root.get("depDate"), today)
+                    ).groupBy(employee.get("id"),
+                            employee.get("firstName"),
+                            employee.get("lastName"));
+
+            return session.createQuery(cq).getResultList();
+        }
+
+    }
+
+
 
 }

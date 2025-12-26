@@ -81,6 +81,7 @@ public class PersonDao {
             employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
             employee.setIDNumber(employeeDto.getIDNumber());
             employee.setCategory(employeeDto.getCategory());
+            employee.setSalary(employeeDto.getSalary());
             session.persist(employee);
             transaction.commit();
         }
@@ -89,7 +90,7 @@ public class PersonDao {
     public static List<EmployeeDto> getEmployees() {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category) " +
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
                                     "FROM Employee e",
                             EmployeeDto.class)
                     .getResultList();
@@ -99,7 +100,7 @@ public class PersonDao {
     public static EmployeeDto getEmployee(long id) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category) " +
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
                                     "FROM Employee e " +
                                     "WHERE e.id = :id", EmployeeDto.class)
                     .setParameter("id", id)
@@ -116,6 +117,7 @@ public class PersonDao {
             employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
             employee.setIDNumber(employeeDto.getIDNumber());
             employee.setCategory(employeeDto.getCategory());
+            employee.setSalary(employeeDto.getSalary());
             session.persist(employee);
             transaction.commit();
         }
@@ -159,6 +161,28 @@ public class PersonDao {
             PaymentDao.createPayment(paymentDto);
             session.persist(passengerService);
             transaction.commit();
+        }
+    }
+
+    public static List<EmployeeDto> sortEmployeesByCategory(){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
+                                    "FROM Employee e " +
+                                    "ORDER BY e.category",
+                            EmployeeDto.class)
+                    .getResultList();
+        }
+    }
+
+    public static List<EmployeeDto> sortEmployeesBySalary(){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
+                                    "FROM Employee e " +
+                                    "ORDER BY e.salary",
+                            EmployeeDto.class)
+                    .getResultList();
         }
     }
 }
