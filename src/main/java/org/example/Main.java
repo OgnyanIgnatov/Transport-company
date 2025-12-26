@@ -11,6 +11,7 @@ import org.example.entity.*;
 import org.hibernate.Session;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -88,7 +89,29 @@ public class Main {
 //        PersonDao.assignSalaryToEmployee(1000,8);
 //        ServiceDao.assignServiceExecutive(3, 2, 7, 2);
 
-        PersonDao.buyTicketForPassengerService(1,2);
+//        CompanyDao.sortCompaniesByIncome();
+
+        //CompanyDao.sortCompaniesByName().forEach(System.out::println);
+//        System.out.println(CompanyDao.getCompanyIncomeForPeriod(2, LocalDate.parse("2025-12-20"), LocalDate.parse("2025-12-31")));
+
+//        PersonDao.sortEmployeesByCategory().forEach(System.out::println);
+//        PersonDao.sortEmployeesBySalary().forEach(System.out::println);
+
+//        ServiceDao.sortServicesByDestination().forEach(System.out::println);
+
+//        List<ServiceDto> servicesDto = new java.util.ArrayList<>(List.of(new ServiceDto()));
+//        ServiceDto s1 = ServiceDao.getService(1);
+//        ServiceDto s2 = ServiceDao.getService(2);
+//
+//        servicesDto.add(s1);
+//        servicesDto.add(s2);
+//
+//        ServiceDao.writeToFile(servicesDto);
+
+//        System.out.println(ServiceDao.getCountOfServicesDone());
+//        System.out.println(ServiceDao.getPriceSumOfServicesDone());
+//        System.out.println(ServiceDao.getEmployeesServiceCount());
+//        System.out.println(ServiceDao.getEmployeesServiceIncomeSum());
 
     }
 }

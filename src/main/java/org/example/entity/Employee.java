@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.util.Set;
@@ -21,6 +22,7 @@ public class Employee extends Person{
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
     private String IDNumber;
 
+    @Positive
     private double salary;
 
     @Enumerated(EnumType.STRING)

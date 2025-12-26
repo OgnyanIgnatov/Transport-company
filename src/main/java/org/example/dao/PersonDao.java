@@ -4,11 +4,8 @@ import org.example.configuration.SessionFactoryUtil;
 import org.example.dto.ClientDto;
 import org.example.dto.PassengerServiceDto;
 import org.example.dto.PaymentDto;
-import org.example.entity.Client;
+import org.example.entity.*;
 import org.example.dto.EmployeeDto;
-import org.example.entity.Employee;
-import org.example.entity.PassengerService;
-import org.example.entity.Payment;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -81,6 +78,7 @@ public class PersonDao {
             employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
             employee.setIDNumber(employeeDto.getIDNumber());
             employee.setCategory(employeeDto.getCategory());
+            employee.setSalary(employeeDto.getSalary());
             session.persist(employee);
             transaction.commit();
         }
@@ -89,7 +87,7 @@ public class PersonDao {
     public static List<EmployeeDto> getEmployees() {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category) " +
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
                                     "FROM Employee e",
                             EmployeeDto.class)
                     .getResultList();
@@ -99,7 +97,7 @@ public class PersonDao {
     public static EmployeeDto getEmployee(long id) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category) " +
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
                                     "FROM Employee e " +
                                     "WHERE e.id = :id", EmployeeDto.class)
                     .setParameter("id", id)
@@ -116,6 +114,7 @@ public class PersonDao {
             employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
             employee.setIDNumber(employeeDto.getIDNumber());
             employee.setCategory(employeeDto.getCategory());
+            employee.setSalary(employeeDto.getSalary());
             session.persist(employee);
             transaction.commit();
         }
@@ -159,6 +158,50 @@ public class PersonDao {
             PaymentDao.createPayment(paymentDto);
             session.persist(passengerService);
             transaction.commit();
+        }
+    }
+
+    public static void buyTicketForTransportService(long tsId, long clientId, double packageWeight){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            TransportService transportService = session.find(TransportService.class, tsId);
+            Client client = session.find(Client.class, clientId);
+
+            if(transportService.getWeight() > 44) throw new IllegalStateException("Vehicle has reached max capacity");
+            double vehicleWeight = transportService.getWeight();
+            transportService.setWeight(vehicleWeight - packageWeight);
+
+            PaymentDto paymentDto = new PaymentDto();
+            paymentDto.setPaymentDate(LocalDate.now());
+            paymentDto.setPrice(transportService.getServicePrice());
+            paymentDto.setServiceId(transportService.getId());
+            paymentDto.setClientId(client.getId());
+
+            PaymentDao.createPayment(paymentDto);
+            session.persist(transportService);
+            transaction.commit();
+        }
+    }
+
+    public static List<EmployeeDto> sortEmployeesByCategory(){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
+                                    "FROM Employee e " +
+                                    "ORDER BY e.category",
+                            EmployeeDto.class)
+                    .getResultList();
+        }
+    }
+
+    public static List<EmployeeDto> sortEmployeesBySalary(){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT new org.example.dto.EmployeeDto(e.id, e.firstName, e.lastName, e.telephoneNumber, e.IDNumber, e.category, e.salary) " +
+                                    "FROM Employee e " +
+                                    "ORDER BY e.salary",
+                            EmployeeDto.class)
+                    .getResultList();
         }
     }
 }

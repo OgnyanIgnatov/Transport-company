@@ -1,13 +1,16 @@
 package org.example.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import org.example.configuration.SessionFactoryUtil;
 import org.example.dto.CompanyDto;
-import org.example.entity.Company;
-import org.example.entity.Employee;
-import org.example.entity.Vehicle;
+import org.example.entity.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -82,6 +85,46 @@ public class CompanyDao {
             vehicle.setCompany(company);
             session.persist(vehicle);
             transaction.commit();
+        }
+    }
+
+    public static List<CompanyDto> sortCompaniesByName(){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT new org.example.dto.CompanyDto(c.id,c.name,c.income) FROM Company c " +
+                                    "ORDER BY c.name",
+                            CompanyDto.class)
+                    .getResultList();
+        }
+    }
+
+    public static List<CompanyDto> sortCompaniesByIncome(){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT new org.example.dto.CompanyDto(c.id,c.name,c.income) FROM Company c " +
+                                    "ORDER BY c.income",
+                            CompanyDto.class)
+                    .getResultList();
+        }
+    }
+
+    public static Double getCompanyIncomeForPeriod(long companyId, LocalDate firstDate, LocalDate lastDate){
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Double> cq = cb.createQuery(Double.class);
+            Root<Payment> paymentRoot = cq.from(Payment.class);
+
+            Join<Payment, Service> service = paymentRoot.join("service");
+            Join<Service, Company> company = service.join("company");
+
+            cq.select(cb.sum(paymentRoot.get("price")))
+                    .where(cb.and(
+                            cb.equal(company.get("id"), companyId),
+                            cb.between(service.get("depDate"), firstDate, lastDate))
+                    );
+
+            Double result = session.createQuery(cq).getSingleResult();
+            return result != null ? result : 0.0;
         }
     }
 }
