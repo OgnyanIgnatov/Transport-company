@@ -105,7 +105,7 @@ public class ServiceDao {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
                     "SELECT new org.example.dto.TransportServiceDto(" +
-                            "ts.id, ts.depLocation, ts.arrLocation, ts.depDate, ts.arrDate, ts.requiredCategory, ts.requiredVehicleType, ts.weight) " +
+                            "ts.id, ts.depLocation, ts.arrLocation, ts.depDate, ts.arrDate, ts.requiredCategory, ts.requiredVehicleType, ts.servicePrice, ts.weight) " +
                             "FROM TransportService ts",
                     TransportServiceDto.class).getResultList();
         }
@@ -115,7 +115,7 @@ public class ServiceDao {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
                             "SELECT new org.example.dto.TransportServiceDto(" +
-                                    "ts.id, ts.depLocation, ts.arrLocation, ts.depDate, ts.arrDate, ts.requiredCategory, ts.requiredVehicleType, ts.weight) " +
+                                    "ts.id, ts.depLocation, ts.arrLocation, ts.depDate, ts.arrDate, ts.requiredCategory, ts.requiredVehicleType, ts.servicePrice, ts.weight) " +
                                     "FROM TransportService ts " +
                                     "WHERE ts.id = :id",
                             TransportServiceDto.class)
