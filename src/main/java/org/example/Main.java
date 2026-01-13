@@ -113,5 +113,6 @@ public class Main {
 //        System.out.println(ServiceDao.getEmployeesServiceCount());
 //        System.out.println(ServiceDao.getEmployeesServiceIncomeSum());
 
+        ServiceDao.getTransportServices();
     }
 }
